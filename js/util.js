@@ -1,23 +1,19 @@
 import { DEFAULT_DEBOUNCE_DELAY, MILISECONDS_IN_SECOND } from './settings.js';
 
-export function generateUniqueId() {
+export const generateUniqueId = () => {
   let currentId = 0;
 
-  return function () {
+  return () => {
     currentId++;
     return currentId;
   };
-}
+};
 
-export function getRandomPositiveIntFromRange(min, max) {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
+export const getRandomPositiveIntFromRange = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
 
-export function getRandomArrayElement(elements) {
-  return elements[Math.floor(Math.random() * elements.length)];
-}
+export const getRandomArrayElement = (elements) => elements[Math.floor(Math.random() * elements.length)];
 
-export function arrayHasDuplicates(elements) {
+export const arrayHasDuplicates = (elements) => {
   const metElements = {};
 
   for (let i = 0; i < elements.length; i++) {
@@ -29,14 +25,14 @@ export function arrayHasDuplicates(elements) {
   }
 
   return false;
-}
+};
 
-export function removeExceedingSpaces(string) {
+export const removeExceedingSpaces = (string) => {
   const regex = /\s{2,}/g;
   return string.trim().replaceAll(regex, ' ');
-}
+};
 
-export function shuffleArray (elements) {
+export const shuffleArray = (elements) => {
   const copyArray = elements.slice();
   let amountOfRemaining = copyArray.length;
 
@@ -49,13 +45,13 @@ export function shuffleArray (elements) {
   }
 
   return copyArray;
-}
+};
 
-export function debounce (cb, interval = DEFAULT_DEBOUNCE_DELAY) {
+export const debounce = (cb, interval = DEFAULT_DEBOUNCE_DELAY) => {
   let timeoutId;
 
   return (...rest) => {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => cb(...rest), interval * MILISECONDS_IN_SECOND);
   };
-}
+};

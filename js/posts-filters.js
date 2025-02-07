@@ -2,10 +2,10 @@ import { displayPosts } from './display-posts.js';
 import { AMOUNT_OF_RANDOM_POSTS, RERENDER_DELAY } from './settings.js';
 import { debounce, shuffleArray } from './util.js';
 
-export function postFilters(posts) {
+export const postFilters = (posts) => {
   const buttons = document.querySelectorAll('.img-filters__button');
 
-  function renderFilteredPosts (filterType) {
+  const renderFilteredPosts = (filterType) => {
     let postsCopy = posts.slice();
 
     switch (filterType) {
@@ -19,7 +19,7 @@ export function postFilters(posts) {
         break;
     }
     displayPosts(postsCopy);
-  }
+  };
 
   const debouncedRenderPosts = debounce(renderFilteredPosts, RERENDER_DELAY);
 
@@ -35,4 +35,4 @@ export function postFilters(posts) {
       debouncedRenderPosts(filterType);
     });
   });
-}
+};

@@ -1,4 +1,4 @@
-export function displayPosts (posts) {
+export const displayPosts = (posts) => {
   if (posts) {
     const postTemplate = document.querySelector('#picture').content.querySelector('.picture');
     const postsFragment = document.createDocumentFragment();
@@ -29,4 +29,4 @@ export function displayPosts (posts) {
   } else {
     throw new Error('Posts were not passed to the displayPosts function');
   }
-}
+};

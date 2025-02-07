@@ -1,6 +1,6 @@
 import { ALLOWED_EXTENSIONS, AMOUNT_OF_COMMENTS_PER_LOAD, AVATAR_HEIGHT, AVATAR_WIDTH } from './settings.js';
 
-export function initiateLightroom (posts) {
+export const initiateLightroom = (posts) => {
   const bigPictureElement = document.querySelector('.big-picture');
   const loadMoreCommentsButton = bigPictureElement.querySelector('.social__comments-loader');
   const imageElement = bigPictureElement.querySelector('.big-picture__img img');
@@ -10,7 +10,7 @@ export function initiateLightroom (posts) {
   // HELPERS
   // ---
 
-  function createCommentTemplate() {
+  const createCommentTemplate = () => {
     const template = document.createElement('li');
     template.classList.add('social__comment');
 
@@ -27,9 +27,9 @@ export function initiateLightroom (posts) {
     template.append(text);
 
     return template;
-  }
+  };
 
-  function setBigPictureData({ url, likes, comments, description }) {
+  const setBigPictureData = ({ url, likes, comments, description }) => {
     const likesElement = bigPictureElement.querySelector('.likes-count');
     const commentsTotalAmountElement = bigPictureElement.querySelector('.social__comment-total-count');
     const descriptionElement = bigPictureElement.querySelector('.social__caption');
@@ -39,9 +39,9 @@ export function initiateLightroom (posts) {
     likesElement.textContent = likes;
     commentsTotalAmountElement.textContent = comments.length;
     commentsShownAmountElement.textContent = 0;
-  }
+  };
 
-  function renderComments(comments) {
+  const renderComments = (comments) => {
     const commentsListElement = bigPictureElement.querySelector('.social__comments');
 
     commentsListElement.innerHTML = '';
@@ -66,9 +66,34 @@ export function initiateLightroom (posts) {
     });
 
     commentsListElement.append(commentsListFragment);
-  }
+  };
 
-  function loadMoreComments() {
+  const getPostIdByImageSource = (src) => {
+    const regExpId = new RegExp(`/[0-9a-zA-Z]+.(${ALLOWED_EXTENSIONS.join('|')})$`, 'g');
+
+    const imageUrl = src.match(regExpId)[0];
+    const foundPosts = posts.filter((post) => post.url.match(regExpId)[0] === imageUrl);
+
+    if (!foundPosts) {
+      throw new Error('No posts found for this image!');
+    }
+
+    if (foundPosts.length > 1) {
+      throw new Error('Found several posts with the same image!');
+    }
+    const postId = foundPosts[0].id;
+
+    return postId;
+  };
+
+  const getPostByImageSource = (src) => {
+    const postId = getPostIdByImageSource(src);
+    const postData = posts.find((post) => post.id === postId);
+
+    return postData;
+  };
+
+  const loadMoreComments = () => {
     const comments = getPostByImageSource(imageElement.src).comments;
     const oldAmount = parseInt(commentsShownAmountElement.textContent, 10);
 
@@ -85,60 +110,34 @@ export function initiateLightroom (posts) {
 
     const commentsListToShow = comments.slice(0, newAmount);
     renderComments(commentsListToShow);
-  }
+  };
 
-  function getPostIdByImageSource(src) {
-    const regExpId = new RegExp(`/[0-9a-zA-Z]+.(${ALLOWED_EXTENSIONS.join('|')})$`, 'g');
-
-    const imageUrl = src.match(regExpId)[0];
-    const foundPosts = posts.filter((post) => post.url.match(regExpId)[0] === imageUrl);
-
-    if (!foundPosts) {
-      throw new Error('No posts found for this image!');
-    }
-
-    if (foundPosts.length > 1) {
-      throw new Error('Found several posts with the same image!');
-    }
-    const postId = foundPosts[0].id;
-
-    return postId;
-  }
-
-  function getPostByImageSource(src) {
-    const postId = getPostIdByImageSource(src);
-    const postData = posts.find((post) => post.id === postId);
-
-    return postData;
-  }
-
-  function closeModal() {
+  const closeModal = () => {
     bigPictureElement.classList.add('hidden');
     document.body.classList.remove('modal-open');
-  }
+  };
+
+  const onLoadMoreCommentsClick = () => {
+    loadMoreComments();
+  };
+
+  const onModalCloseButtonClick = () => {
+    closeModal();
+    removeModalListeners();
+  };
+
+  const onEscapePress = (evt) => {
+    if (evt.key === 'Escape') {
+      closeModal();
+      removeModalListeners();
+    }
+  };
 
   function removeModalListeners() {
     document.removeEventListener('keydown', onEscapePress);
     bigPictureElement.removeEventListener('click', onModalCloseButtonClick);
 
-
     loadMoreCommentsButton.removeEventListener('click', onLoadMoreCommentsClick);
-  }
-
-  function onLoadMoreCommentsClick() {
-    loadMoreComments();
-  }
-
-  function onModalCloseButtonClick() {
-    closeModal();
-    removeModalListeners();
-  }
-
-  function onEscapePress(evt) {
-    if (evt.key === 'Escape') {
-      closeModal();
-      removeModalListeners();
-    }
   }
 
   // ---
@@ -168,4 +167,4 @@ export function initiateLightroom (posts) {
       loadMoreCommentsButton.addEventListener('click', onLoadMoreCommentsClick);
     }
   });
-}
+};

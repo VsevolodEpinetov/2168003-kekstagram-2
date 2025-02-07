@@ -1,16 +1,16 @@
 import { MILISECONDS_IN_SECOND } from './settings.js';
 
-export function showToast(templateId, mainClass, { onClose = () => {}, closeAfter = null } = {}) {
+export const showToast = (templateId, mainClass, { onClose = () => { }, closeAfter = null } = {}) => {
   const toastTemplate = document.querySelector(`#${templateId}`).content.querySelector(`.${mainClass}`);
   const toast = toastTemplate.cloneNode(true);
   const toastButton = toast.querySelector('button');
   const bodyElement = document.querySelector('body');
 
-  function onEscButtonPress (evt) {
+  const onEscButtonPress = (evt) => {
     if (evt.key === 'Escape') {
       closeToast();
     }
-  }
+  };
 
   function closeToast() {
     toast.remove();
@@ -38,4 +38,4 @@ export function showToast(templateId, mainClass, { onClose = () => {}, closeAfte
   });
 
   document.addEventListener('keydown', onEscButtonPress);
-}
+};
